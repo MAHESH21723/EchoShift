@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Echo Shift — A puzzle in good company</title>
+  <meta name="description" content="Record five seconds. Leave an echo behind. Solve three chambers by cooperating with your past self.">
+  <style>
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#080e16;color:#e8f1ee;font-family:system-ui,sans-serif}
+    body{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px}
+    header,footer{width:min(1500px,100%);display:flex;justify-content:space-between;gap:20px;align-items:center}
+    header{padding:0 0 18px;font-size:12px;letter-spacing:2px;color:#91a6b4}header strong{color:#87f6d4;font-size:15px}
+    #frame{position:relative;width:min(1500px,100%);aspect-ratio:16/9;border:1px solid #263744;background:#0b131d;box-shadow:0 26px 100px #0008}
+    canvas{display:block;width:100%;height:100%;outline:none}#loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#0b131d;text-align:center}
+    .mark{font-size:60px;font-weight:700;letter-spacing:-5px;color:#87f6d4}.caption{font-size:12px;letter-spacing:3px;margin:24px 0;color:#91a6b4}
+    .track{width:240px;height:3px;background:#273642;margin:20px auto}#bar{height:100%;width:0;background:#87f6d4;transition:width .2s}#progress{font-size:12px;color:#91a6b4}
+    footer{padding:17px 0;font-size:12px;color:#91a6b4}button{background:transparent;border:1px solid #344b59;color:#d3e2de;padding:9px 16px;cursor:pointer;font:inherit}button:hover{border-color:#87f6d4;color:#87f6d4}
+    #error{display:none;white-space:pre-wrap;max-width:700px;padding:30px;color:#ffca91}#frame:fullscreen{width:100vw;height:100vh;aspect-ratio:auto;display:flex;align-items:center;justify-content:center;background:#080e16}#frame:fullscreen canvas{width:min(100vw,177.7778vh);height:min(100vh,56.25vw)}
+    @media(max-width:700px){body{padding:8px}header span{display:none}footer{font-size:10px;align-items:flex-start}footer span{max-width:70%}}
+  </style>
+</head>
+<body>
+  <header><strong>ECHO / SHIFT</strong><span>A SMALL EXPERIMENT IN COOPERATION</span></header>
+  <main id="frame">
+    <canvas id="unity-canvas" width="{{{ WIDTH }}}" height="{{{ HEIGHT }}}" tabindex="0" aria-label="Echo Shift puzzle game. Move with WASD or arrows; E records; X undoes; R restarts; Escape pauses."></canvas>
+    <div id="loading"><div><div class="mark">E / S</div><div class="caption">ESTABLISHING A CONNECTION</div><div class="track"><div id="bar"></div></div><div id="progress">Loading the experiment...</div><div id="error"></div></div></div>
+  </main>
+  <footer><span>WASD / ARROWS &nbsp; Move &nbsp; · &nbsp; E &nbsp; Record &nbsp; · &nbsp; X &nbsp; Undo &nbsp; · &nbsp; H &nbsp; Hint</span><button id="fullscreen" type="button">Fullscreen ↗</button></footer>
+  <script>
+    const canvas=document.getElementById('unity-canvas');
+    const loader=document.createElement('script');loader.src='Build/{{{ LOADER_FILENAME }}}';
+    const fail=message=>{document.getElementById('error').style.display='block';document.getElementById('error').textContent='The experiment could not start. Try a current desktop browser, then reload.\n'+message;document.getElementById('progress').textContent='Connection interrupted';};
+    loader.onload=()=>createUnityInstance(canvas,{
+      dataUrl:'Build/{{{ DATA_FILENAME }}}',frameworkUrl:'Build/{{{ FRAMEWORK_FILENAME }}}',codeUrl:'Build/{{{ CODE_FILENAME }}}',
+      streamingAssetsUrl:'StreamingAssets',companyName:'{{{ COMPANY_NAME }}}',productName:'{{{ PRODUCT_NAME }}}',productVersion:'{{{ PRODUCT_VERSION }}}',
+      matchWebGLToCanvasSize:true,devicePixelRatio:Math.min(window.devicePixelRatio||1,2),
+      showBanner:(message,type)=>{if(type==='error')fail(message);else console.warn(message);}
+    },progress=>{document.getElementById('bar').style.width=(progress*100)+'%';document.getElementById('progress').textContent=Math.round(progress*100)+'% / preparing chamber';})
+    .then(instance=>{window.echoShift=instance;document.getElementById('loading').style.display='none';canvas.focus();})
+    .catch(fail);
+    loader.onerror=()=>fail('Could not load the game files. Serve this folder over HTTP instead of opening index.html directly.');document.body.appendChild(loader);
+    canvas.addEventListener('pointerdown',()=>canvas.focus());
+    canvas.addEventListener('keydown',event=>{if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(event.key))event.preventDefault();});
+    document.getElementById('fullscreen').onclick=()=>{const frame=document.getElementById('frame');if(!document.fullscreenElement)frame.requestFullscreen?.().catch(()=>{});else document.exitFullscreen?.();canvas.focus();};
+  </script>
+</body>
+</html>

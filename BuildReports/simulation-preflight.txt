@@ -1,0 +1,37 @@
+35 checks passed
+
+Echo interpolates between recorded positions
+Echo clamps playback and holds its endpoint
+Closed gate blocks the player
+Recording automatically releases at five seconds
+Recording duration stays within its limit
+Auto release restores the recording anchor
+Completed echo continues holding
+Echo slot limit is enforced
+Undo frees an echo slot
+Undo cancels an unfinished recording
+Diagonal movement is normalized
+Room 1 accepts its first recording
+Room 1 releases a valid echo
+Room 1 returns to its exact anchor
+Room 1 echo holds plate A
+Room 1 is completable through ordinary movement and recordings
+Room 1 collects memory fragments along a recorded route
+Completed room stops simulating
+Room 2 accepts its first recording
+Room 2 releases a valid echo
+Room 2 returns to its exact anchor
+Room 2 echo holds plate A
+Second echo holds plate B across the first gate
+Room 2 is completable through ordinary movement and recordings
+Room 2 collects memory fragments along a recorded route
+Completed room stops simulating
+Room 3 accepts its first recording
+Room 3 releases a valid echo
+Room 3 returns to its exact anchor
+Room 3 echo holds plate A
+Final gate needs both plates, not just one
+Final gate opens with both echoes active
+Room 3 is completable through ordinary movement and recordings
+Room 3 collects memory fragments along a recorded route
+Completed room stops simulating
